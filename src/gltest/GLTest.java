@@ -50,7 +50,7 @@ public class GLTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) {        
-        GLTest glTest = new GLTest(true);
+        GLTest glTest = new GLTest(false);
         glTest.run();
         System.exit(0);
     }
@@ -124,27 +124,28 @@ public class GLTest {
     
     
     /**
+     * Update attributes of game objects.
      * The game logic lies here.
      */
     void update() {
-        // new coordinates for paddle and ball
-        int paddleX = paddle.getX() + paddle.getVelocityX();
+        // current attributes of paddle and ball
+        int paddleX = paddle.getX();
         int paddleY = paddle.getY();
         int paddleWidth = paddle.getWidth();
-        int ballX = ball.getX() + ball.getVelocityX();
-        int ballY = ball.getY() + ball.getVelocityY();
+        int ballX = ball.getX();
+        int ballY = ball.getY();
         int ballDiameter = ball.getDiameter();
         int ballRadius = ball.getRadius();
         
         // paddle movement & wall collision
         if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
-            if ((paddleX + paddle.getWidth()) < winSize[0]) {
-                paddle.setX(paddleX);
+            if ((paddleX + paddle.getWidth()) < (winSize[0] - 15)) {
+                paddle.setX(paddleX + paddle.getVelocityX());
             }
         }
         if (input.isKeyDown(KeyEvent.VK_LEFT)) {
-            if (paddleX > 0) {
-                paddle.setX(paddleX - paddle.getVelocityX() * 2);
+            if (paddleX > 15) {
+                paddle.setX(paddleX - paddle.getVelocityX());
             }
         }
         
@@ -166,8 +167,8 @@ public class GLTest {
             isRunning = false;
         }
     
-        ball.setX(ballX);
-        ball.setY(ballY);
+        ball.setX(ballX + ball.getVelocityX());
+        ball.setY(ballY + ball.getVelocityY());
     }
     
     
