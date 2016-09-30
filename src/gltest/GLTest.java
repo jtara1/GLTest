@@ -19,7 +19,7 @@ public class GLTest {
     private Insets insets;
     
     private final Integer[] winSize = {1280, 720}; // window size
-    private final String winTitle = "Pong"; // window title
+    private final String winTitle = "Pong by jtara1"; // window title
     private Dimension frame_dim;
     private BufferedImage backBuffer;
     private final Boolean debug;
@@ -31,7 +31,6 @@ public class GLTest {
     private Ball ball;
 
 
-    
     /**
      * GLTest constructor
      * @param dbg: set debug mode
@@ -47,17 +46,20 @@ public class GLTest {
     
     
     /**
+     * Run the run method
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        Boolean dbg = true;
-        
-        GLTest glTest = new GLTest(dbg = dbg);
+    public static void main(String[] args) {        
+        GLTest glTest = new GLTest(true);
         glTest.run();
         System.exit(0);
     }
     
     
+    /**
+     * Create frame & set its settings, create or initialize other objects for
+     *  the game.
+     */
     void initialize() {
                  
         frame.setTitle(winTitle); 
@@ -87,9 +89,8 @@ public class GLTest {
     }
     
     
-    
     /** 
-     * This method starts the game and runs it in a loop 
+     * This method starts the game and runs it in a loop .
      */ 
     public void run() 
     { 
@@ -100,7 +101,7 @@ public class GLTest {
             update(); 
             draw(); 
 
-            //  delay for each frame  -   time it took for one frame 
+            //  delay for each frame  -  time it took for one frame 
             time = (1000 / fps) - (System.currentTimeMillis() - time); 
 
             if (time > 0) {
@@ -110,7 +111,7 @@ public class GLTest {
                         }
                         Thread.sleep(time); 
                     }
-                    catch(Exception e){} 
+                    catch(Exception e) {} 
             } 
             else {
                 if (debug) {
@@ -121,6 +122,10 @@ public class GLTest {
         frame.setVisible(false); 
     }
     
+    
+    /**
+     * The game logic lies here.
+     */
     void update() {
         // new coordinates for paddle and ball
         int paddleX = paddle.getX() + paddle.getVelocityX();
@@ -131,8 +136,9 @@ public class GLTest {
         int ballDiameter = ball.getDiameter();
         int ballRadius = ball.getRadius();
         
+        // paddle movement & wall collision
         if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
-            if ((paddleX + paddle.getWidth()) <= winSize[0]) {
+            if ((paddleX + paddle.getWidth()) < winSize[0]) {
                 paddle.setX(paddleX);
             }
         }
@@ -142,29 +148,33 @@ public class GLTest {
             }
         }
         
-        // ball & paddle collided
-        if ((ballY + ballDiameter) == paddleY && (paddleX <= (ballX + ballRadius) && 
+        // ball & paddle collision
+        if ((ballY + ballDiameter) >= paddleY && (paddleX <= (ballX + ballRadius) && 
                 (paddleX + paddleWidth) >= (ballX + ballRadius))) {
             ball.reflect("bottom");
         }
         
-        
-        // ball movement & wall collision
-        // check for out of bounds
+        // ball & wall collision
         if (ballX <= 0 || (ballX + ballDiameter) >= winSize[0]) {
             ball.reflect("left");
         }
         else if (ballY <= 0) {
             ball.reflect("top");
         }
+        // check for out of bounds at bottom
         else if ((ballY + ballDiameter) >= winSize[1]) {
-            System.exit(0);
+            isRunning = false;
         }
     
         ball.setX(ballX);
         ball.setY(ballY);
     }
     
+    
+    /**
+     * Reset Graphic by setting fillColor to white then draw each object on the
+     *  BufferedImage then draw that on the frame Graphic.
+     */
     void draw() {
         Graphics g = frame.getGraphics(); 
         Graphics bbg = backBuffer.getGraphics(); 
@@ -174,18 +184,17 @@ public class GLTest {
 
         bbg.setColor(Color.BLACK); 
         
-        // draw paddle
         if (debug) {
             System.out.printf("x = %d, y = %d, w = %d, h = % d\n",
                 paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
         }
+        
+        // draw paddle
         paddle.draw(bbg);
         
         // draw ball
-        ball.draw(bbg);
-            
+        ball.draw(bbg);            
         
         g.drawImage(backBuffer, insets.left, insets.top, frame);
-//        g.drawImage(backBuffer, 0, 0, frame);
     }
 }
