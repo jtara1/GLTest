@@ -150,7 +150,7 @@ public class GLTest {
         }
         
         // ball & paddle collision
-        if ((ballY + ballDiameter) >= paddleY && (paddleX <= (ballX + ballRadius) && 
+        if ((ballY + ballDiameter) == paddleY && (paddleX <= (ballX + ballRadius) && 
                 (paddleX + paddleWidth) >= (ballX + ballRadius))) {
             ball.reflect("bottom");
         }
