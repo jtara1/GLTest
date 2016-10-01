@@ -26,6 +26,7 @@ public class GLTest {
     
     private final long fps = 60; // frames per second
     private boolean isRunning = true;
+    private Color backgroundColor;
     private ArrayList<GameObject> gameObjects = new ArrayList();
     private Paddle paddle;
     private Ball ball;
@@ -80,6 +81,7 @@ public class GLTest {
         
         backBuffer = new BufferedImage(winSize[0], winSize[1], BufferedImage.TYPE_INT_RGB);
         input = new InputHandler(frame);
+        backgroundColor = Color.WHITE;
         
         // gameObjects
         paddle = new Paddle(frame_dim, insets);
@@ -119,7 +121,7 @@ public class GLTest {
                 }
             }
         } 
-        frame.setVisible(false); 
+        gameOver();
     }
     
     
@@ -180,7 +182,7 @@ public class GLTest {
         Graphics g = frame.getGraphics(); 
         Graphics bbg = backBuffer.getGraphics(); 
 
-        bbg.setColor(Color.WHITE); 
+        bbg.setColor(backgroundColor); 
         bbg.fillRect(0, 0, winSize[0], winSize[1]); 
 
         bbg.setColor(Color.BLACK); 
@@ -197,5 +199,25 @@ public class GLTest {
         ball.draw(bbg);            
         
         g.drawImage(backBuffer, insets.left, insets.top, frame);
+    }
+    
+    
+    /**
+     * Show game over screen, and sleep for 5 minutes.
+     */
+    void gameOver() {
+        Graphics g = frame.getGraphics();
+        
+        g.setColor(backgroundColor);
+        g.fillRect(insets.left, insets.top, winSize[0], winSize[1]);
+        
+        g.setColor(Color.BLACK);
+        g.drawString("Game Over", winSize[0] / 2 - 50, winSize[1] / 2);
+
+        long timeOut = 5 * 60 * 1000; // 5 minutes in milliseconds
+        try {
+            Thread.sleep(timeOut);
+        }
+        catch(Exception e) {}
     }
 }
